@@ -1,0 +1,15 @@
+[build]
+# Standard: RP2350 (Pico 2, Cortex-M33 mit FPU). Für den RP2040 die Aliase unten benutzen.
+target = "thumbv8m.main-none-eabihf"
+
+[target.'cfg(all(target_arch = "arm", target_os = "none"))']
+# Ohne Debug Probe: Pico mit gedrückter BOOTSEL-Taste einstecken, dann `cargo run`.
+# Das Skript wandelt die ELF-Datei in UF2 um, prüft den Chip und kopiert sie aufs Laufwerk.
+runner = "python3 -I tools/elf2uf2.py --flash"
+# Mit Debug Probe (SWD), z. B. Raspberry Pi Debug Probe:
+#runner = "probe-rs run --chip RP235x"     # Pico 2
+#runner = "probe-rs run --chip RP2040"     # Pico
+
+[alias]
+build-rp2040 = "build --release --target thumbv6m-none-eabi --no-default-features --features rp2040"
+run-rp2040 = "run --release --target thumbv6m-none-eabi --no-default-features --features rp2040"

@@ -1,0 +1,41 @@
+[package]
+name = "embassy-rp235"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+default-run = "embassy-rp235"
+description = "Embassy-Beispiele für Raspberry Pi Pico 2 (RP2350) und Pico (RP2040): Blinken, USB-Serial-Ausgabe, SPI, ILI9341"
+
+[dependencies]
+embassy-executor = { version = "0.10", features = ["platform-cortex-m", "executor-thread"] }
+embassy-time = "0.5"
+embassy-sync = "0.8"
+embassy-rp = { version = "0.10", features = ["time-driver", "critical-section-impl", "unstable-pac"] }
+embassy-usb = "0.6"
+embassy-futures = "0.1"
+cortex-m = { version = "0.7", features = ["inline-asm"] }
+cortex-m-rt = "0.7"
+panic-halt = "1"
+static_cell = "2"
+# Atomics für static_cell auf dem RP2040 (Cortex-M0+ hat kein CAS)
+portable-atomic = { version = "1.5", features = ["critical-section"] }
+embedded-hal = "1.0"
+embedded-hal-bus = "0.3"
+embedded-graphics = "0.8"
+mipidsi = "0.10"
+
+[features]
+default = ["rp2350"]
+# Raspberry Pi Pico 2 (RP2350A), Target thumbv8m.main-none-eabihf
+rp2350 = ["embassy-rp/rp235xa", "embassy-rp/binary-info"]
+# Raspberry Pi Pico (RP2040), Target thumbv6m-none-eabi:
+#   cargo run-rp2040 [--bin ...]   (Alias in .cargo/config.toml)
+rp2040 = ["embassy-rp/rp2040"]
+
+[profile.release]
+debug = 2
+lto = true
+opt-level = "s"
+
+[profile.dev]
+opt-level = "s"
